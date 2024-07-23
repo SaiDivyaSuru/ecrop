@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header">
+	<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	<form onsubmit="return validateForm()" th:object="${crop}" th:action="@{/clsaccepttrans}" method="post">
+		<div class="form-group row">
+			<table class="table mapped " id="absseasondistwise" style="width: 70%;margin-left: 15%;">
+				<thead style="position: sticky">
+					<tr>
+						<th>S.No</th>
+						<th>Name of the Crop</th>
+						<th>No.Of RSK's</th>
+						<th>No.Of Photos Uploaded</th>
+						<th>No.Of Photos Approved By DRC</th>
+						<th>No.Of Photos Approved By Scientist</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+				    <tr th:each="data, rowstat : ${getcropwisedata}">
+				        <td th:text="${rowstat.index + 1}"></td>
+				        <td><a th:href="@{/cropwisedata/{param}(param=${data.cropnature})}" th:text="${data.cropnature}"></a></td>
+				        <td th:text="${data.cr_vcode}"></td>
+				        <td th:text="${data.photosuploaded}"></td>
+				        <td th:text="${data.drc_appr_status}"></td>
+				        <td th:text="${data.ps_appr_status}"></td>
+				    </tr>
+				</tbody>
+				<tfoot>
+				    <tr>
+				        <td>Total</td>
+				        <td></td>
+				        <td th:text="${getcropwisedata[getcropwisedata.size()-1].totalrbks}"></td>
+				        <td th:text="${getcropwisedata[getcropwisedata.size()-1].totalPhotosUploaded}"></td>
+				        <td th:text="${getcropwisedata[getcropwisedata.size()-1].totalDrcApprStatus}"></td>
+				        <td th:text="${getcropwisedata[getcropwisedata.size()-1].totalPsApprStatus}"></td>
+				    </tr>
+				</tfoot>
+			</table>
+		</div>
+	</form>
+</body>
+
+</html>

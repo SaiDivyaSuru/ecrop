@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Horti Crop Report</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--	 Your custom styles -->
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<!--		Bootstrap and related scripts-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!--	 ajax/jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+
+	<style>
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<form>
+		<table id="customers" class="container" cellspacing="0" width="100%">
+			<thead>
+				 <tr>       
+                        <th> <b> SI.No </b> </th>             
+                        <th> <b> Crop Name </b> </th>                                                         
+                        <th> <b>Crop-Nature</b> </th> 
+                    </tr>
+			</thead>
+			<tbody>
+<!--				 Iterate over crop groups and generate table rows with serial numbers -->
+				<tr th:each="horti, stat : ${horticrops}">
+					<td th:text="${stat.index + 1}" class="text-center"></td>
+					<td th:text="${horti.cropname}" class="text-center"></td>
+					<td th:text="${horti.cropnameeng}" class="text-center"></td>
+					<td th:text="${horti.cropnature}" class="text-center"></td>
+				</tr>
+				<tr>
+					<td colspan="20" align="center">
+						<input type="button" value="Go Back" onclick="goBack()"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</form>
+
+	<div th:if="${message}" class="alert alert-danger" role="alert">
+		<span th:text="${message}"></span>
+	</div>
+
+<script>
+	function goBack() {
+            window.location.href = "/distwisestatusrepforallcrops"; // Replace "/home" with your home page URL if it's different
+        }
+</script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>District wise supervisory check report</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Your custom styles -->
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<!--	Bootstrap and related scripts-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<style>
+		/* CSS styles for the table */
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: rgb(0, 0, 0);
+		}
+	</style>
+
+	
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<form method="post">
+		<div class="card">
+			<div class="card-body">
+				<table id="customers" class="table stripe row-border order-column display" style="width:100%;">
+					<thead>
+						<tr>
+							<th colspan="8" style="background-color: #c4def1;text-align: center">
+								<b><font style=color:#006400 size="4pt">HORTICULTURE</font></b>
+							</th>
+						</tr>
+						<tr>
+							<th colspan="2" style="text-align: center">Supervisory Officer</th>
+							<th colspan="3" style="background-color: #c4def1;text-align: center">DHO</th>
+							<th colspan="3" style="background-color: #c4def1;text-align: center">HO</th>
+
+
+						</tr>
+						<tr>
+							<th class="text-center"> <b> S.No. </b> </th>
+							<th class="text-center"> <b> District </b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Allotted</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br> Correct</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br>InCorrect </b>
+							</th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Allotted</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br> Correct</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br>InCorrect </b>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					
+					<tbody>
+					<tr th:each="distwisesupch, iterStat : ${distwisesupchk}">
+						<td th:text="${iterStat.count}" class="text-center"></td>
+						<td th:text="${distwisesupch.dname}" class="text-center"></td>
+						<td th:text="${distwisesupch.dho_allotted}" class="text-center"></td>
+						<td th:text="${distwisesupch.dh_found_correct}" class="text-center"></td>
+						<td th:text="${distwisesupch.dh_found_incorrect}" class="text-center"></td>
+						<td th:text="${distwisesupch.ho_allotted}" class="text-center"></td>
+						<td th:text="${distwisesupch.ho_found_correct}" class="text-center"></td>
+						<td th:text="${distwisesupch.ho_found_incorrect}" class="text-center"></td>
+					</tr>
+				</tbody>
+					     
+					<div th:text="${message}"></div>
+					
+					
+				</table>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

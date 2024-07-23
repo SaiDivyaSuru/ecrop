@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>District wise status report for all crops</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--	 Your custom styles -->
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<!--		Bootstrap and related scripts-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!--	 ajax/jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ <script th:src="@{/js/script.js}"></script> <!-- Include your JavaScript file -->
+
+    <style>
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #006400;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header and navigation might go here if included from other templates -->
+    <div th:insert="headerImage"></div>
+<div th:insert="navBarTop"></div>
+<div th:insert="headerMessage"></div>
+    <!-- Form section to select crop year -->
+    <form name="form1" method="post">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="card card-body" style="background-color: #e6e2d3;">
+                        <div class="card-title">
+                            <h4 style=" color: rgb(0, 0, 0); width: auto; text-align: center; padding: 7px; border: none; border-radius: 5px;">
+                                District wise status report for all crops
+                            </h4>
+                            <br />
+                        </div>
+
+                        <!-- Table to select crop year -->
+                        <table align="center">
+                            <tr>
+                                <th colspan="2" class="heading"><b> </b></th>
+                            </tr>
+                            <tr>
+                                <td class="tdnum" colspan="2" style="width: 50%">
+                                    <b>Crop Year <font color="red">*</font> :</b>
+                                </td>
+                                <td>
+                                    <select name="cropyearname" id="cropyearid" style="width: 200px">
+                                        <option value="0">------Select CropYear--------</option>
+                                        <!-- Assuming ${cropyears} is populated with data -->
+                                        <!-- Adjust th:value and th:text accordingly based on your actual data structure -->
+                                        <option th:each="cropyear: ${cropyears}" th:value="${cropyear.seasonvalue}" th:text="${cropyear.cropyear}"></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="heading tdnum" colspan="10"><b>Report Time : <span th:text="${theDate}"></span></b></td>
+                            </tr>
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <br>
+         <br>
+    </form>
+
+    <!-- Table to display district-wise status report -->
+    <div id="divprint">
+    <table id="customers">
+        <thead>
+            <tr>
+                <th align="center" rowspan="2"><b> S.No. </b></th>
+                <th align="center" rowspan="2" style="text-align: center"><b>District </b></th>
+                <th align="center" rowspan="2"><b> Total Mandals </b></th>
+                <th align="center" rowspan="2"><b> Total Revenue<br> Villages</b></th>
+                <th align="center" colspan="4" style="text-align: center">Agriculture</th>
+                <th align="center" colspan="4" style="text-align: center">Horticulture</th>
+                <th align="center" colspan="4" style="text-align: center">Sericulture</th>
+                <th align="center" colspan="4" style="text-align: center">SocialForestry</th>
+                <th align="center" colspan="2" style="text-align: center">Total</th>
+            </tr>
+            <tr>
+                <th><b> Total Mandals <br>Covered</b></th>
+                <th><b> Total Revenue<br> Villages Covered</b></th>
+                <th>Extent<br>Booked(In Acres)</th>
+                <th>No. of<br>Farmers</th>
+                <th><b> Total Mandals <br>Covered</b></th>
+                <th><b> Total Revenue<br> Villages Covered</b></th>
+                <th>Extent<br>Booked(In Acres)</th>
+                <th>No. of<br>Farmers</th>
+                <th><b> Total Mandals <br>Covered</b></th>
+                <th><b> Total Revenue<br> Villages Covered</b></th>
+                <th>Extent<br>Booked(In Acres)</th>
+                <th>No. of<br>Farmers</th>
+                <th><b> Total Mandals <br>Covered</b></th>
+                <th><b> Total Revenue<br> Villages Covered</b></th>
+                <th>Extent<br>Booked</th>
+                <th>No. of<br>Farmers</th>
+                <th>Extent<br>Booked(In Acres)</th>
+                <th>No. of<br>Farmers</th>
+            </tr>
+        </thead>
+        
+        <!-- Table body content will be filled dynamically using JavaScript -->
+        <tbody></tbody>
+    </table>
+</div>
+<br>
+ 
+    <!-- Display message or additional content if needed -->
+    <div th:text="${message}"></div>
+
+    <!-- Buttons section for different crops and export options -->
+     <div align="center" style="color: black; margin-top: 10px;">
+
+      
+        <form th:action="@{/Rep_Agri_Crops}" method="get" id="agriForm">
+			<b>Crops Covered:</b>
+            <input name="agri" type="submit" value="Agriculture">&nbsp;&nbsp;
+            <input name="agri" type="submit" value="Horticulture">&nbsp;&nbsp;
+             <input name="agri" type="submit" value="Sericulture">
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="ctl00$ContentPlaceHolder1$btnPrint" type="button" id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divprint')" value="Print">
+        <input type="button" onclick="tableToExcel('customers', 'DistrictWiseReport')" value="Excel">
+
+        <input type="button" value="Back" onclick="goBack()">
+        </form>
+    </div>
+
+
+    <!-- Custom JavaScript for AJAX and other functionality -->
+   <script>
+        $(document).ready(function() {
+            // Execute the AJAX call to get table data when cropyearid is selected
+            $('#cropyearid').on('change', function () {
+                var cropYearId = $(this).val();
+                var href2 = "./districtwisestatusreportforallcrp/" + cropYearId;
+                
+                $.get(href2, function(tableData) {
+                    console.log(JSON.stringify(tableData));
+
+                    $('#customers tbody').empty(); // Clear existing table rows
+                    if (tableData.length > 0) {
+                        var totalWbdname = 0, totalTmandals = 0;
+                        var totalAgriMandals = 0, totalHortiMandals = 0, totalSeriMandals = 0, totalSocForestryMandals = 0;
+                        var totalAgriVillages = 0, totalHortiVillages = 0, totalSeriVillages = 0, totalSocForestryVillages = 0;
+                        var totalAgriExt = 0, totalHortiExt = 0, totalSeriExt = 0, totalSocForestryExt = 0;
+                        var totalAgriFarmers = 0, totalHortiFarmers = 0, totalSeriFarmers = 0, totalSocForestryFarmers = 0;
+                        var totalExtentBooked = 0, totalFarmers = 0;
+
+                        $.each(tableData, function (i, rowData) {
+                            console.log("rowData--" + JSON.stringify(rowData));
+                            
+                            // Summing up values for each category
+                            totalWbdname += parseInt(rowData.wbdname); // Assuming wbdname is a String value
+                            totalTmandals += Number(rowData.tmandals); // Assuming tmandals is a long value
+                            
+                            totalAgriMandals += parseInt(rowData.dagri_mandals);
+                            totalAgriVillages += parseInt(rowData.dagri_villages);
+                            totalAgriExt += parseFloat(rowData.dagri_ext);
+                            totalAgriFarmers += parseInt(rowData.dagri_farmers);
+
+                            totalHortiMandals += parseInt(rowData.dhorti_mandals);
+                            totalHortiVillages += parseInt(rowData.dhorti_villages);
+                            totalHortiExt += parseFloat(rowData.dhorti_ext);
+                            totalHortiFarmers += parseInt(rowData.dhorti_farmers);
+
+                            totalSeriMandals += parseInt(rowData.dseri_mandals);
+                            totalSeriVillages += parseInt(rowData.dseri_villages);
+                            totalSeriExt += parseFloat(rowData.dseri_ext);
+                            totalSeriFarmers += parseInt(rowData.dseri_farmers);
+
+                            totalSocForestryMandals += parseInt(rowData.dsoc_mandals);
+                            totalSocForestryVillages += parseInt(rowData.dsoc_villages);
+                            totalSocForestryExt += parseFloat(rowData.dsoc_ext);
+                            totalSocForestryFarmers += parseInt(rowData.dsoc_farmers);
+
+                            // Calculate total extent booked and total farmers
+                            totalExtentBooked += parseFloat(rowData.dagri_ext) + parseFloat(rowData.dhorti_ext) + parseFloat(rowData.dseri_ext) + parseFloat(rowData.dsoc_ext);
+                            totalFarmers += parseInt(rowData.dagri_farmers) + parseInt(rowData.dhorti_farmers) + parseInt(rowData.dseri_farmers) + parseInt(rowData.dsoc_farmers);
+
+                            var row = $('<tr>');
+                            $('<td>').text(i + 1).appendTo(row);
+                            $('<td class="text-center">').text(rowData.wbdname).appendTo(row); 
+                            $('<td class="text-center">').text(rowData.tmandals).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.tvillages).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dagri_mandals).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dagri_villages).appendTo(row);        
+                            $('<td class="text-center">').text(rowData.dagri_ext).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dagri_farmers).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dhorti_mandals).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dhorti_villages).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dhorti_ext).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dhorti_farmers).appendTo(row);        
+                            $('<td class="text-center">').text(rowData.dseri_mandals).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dseri_villages).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dseri_ext).appendTo(row);
+                            $('<td class="text-center">').text(rowData.dseri_farmers).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dsoc_mandals).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dsoc_villages).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dsoc_ext).appendTo(row);    
+                            $('<td class="text-center">').text(rowData.dsoc_farmers).appendTo(row); 
+
+                            // Calculate the sum of the "Extent Booked(In Acres)" columns and round to two decimals
+                            var sumExtentBooked = parseFloat(rowData.dagri_ext) + parseFloat(rowData.dhorti_ext) + parseFloat(rowData.dseri_ext) + parseFloat(rowData.dsoc_ext);
+                            $('<td class="text-center">').text(sumExtentBooked.toFixed(2)).appendTo(row);
+                            // Calculate the sum of the "No. of Farmers" columns
+                            $('<td class="text-center">').text(parseInt(rowData.dagri_farmers) + parseInt(rowData.dhorti_farmers) + parseInt(rowData.dseri_farmers) + parseInt(rowData.dsoc_farmers)).appendTo(row);
+
+                            row.appendTo('#customers tbody');
+                        });
+
+                        // Add a row at the end to display the totals
+                        var totalRow = $('<tr>');
+                        $('<td colspan="2" class="text-center">').text("Total:").appendTo(totalRow);
+                        $('<td class="text-center">').text(totalWbdname).appendTo(totalRow); // Append totalwbdname
+                        $('<td class="text-center">').text(totalTmandals).appendTo(totalRow); // Append totaltmandals    
+                        $('<td class="text-center">').text(totalAgriMandals).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalAgriVillages).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalAgriExt.toFixed(2)).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalAgriFarmers).appendTo(totalRow);
+
+                        $('<td class="text-center">').text(totalHortiMandals).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalHortiVillages).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalHortiExt.toFixed(2)).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalHortiFarmers).appendTo(totalRow);
+
+                        $('<td class="text-center">').text(totalSeriMandals).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSeriVillages).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSeriExt.toFixed(2)).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSeriFarmers).appendTo(totalRow);
+
+                        $('<td class="text-center">').text(totalSocForestryMandals).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSocForestryVillages).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSocForestryExt.toFixed(2)).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalSocForestryFarmers).appendTo(totalRow);
+
+                        $('<td class="text-center">').text(totalExtentBooked.toFixed(2)).appendTo(totalRow);
+                        $('<td class="text-center">').text(totalFarmers).appendTo(totalRow);
+
+                        totalRow.appendTo('#customers tbody');
+
+                    } else {
+                        $('#customers tbody').html('<tr><td colspan="21" class="text-center">No data found.</td></tr>');
+                        console.log("No data found.");
+                    }
+                }).fail(function() {
+                    console.log("Error retrieving data.");
+                });
+            });
+        });
+
+        function goBack() {
+            window.location.href = "/home"; // Replace "/home" with your home page URL if it's different
+        }
+    </script>
+    
+     </script>
+                    <script language="javascript">            
+                        var tableToExcel = (function () {
+                    var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table align="center">{table}</table></body></html>'
+                    , base64 = function (s) {
+                    return window.btoa(unescape(encodeURIComponent(s)))
+                    }
+          , format = function (s, c) {
+                    return s.replace(/{(\w+)}/g, function (m, p) {
+                        return c[p];
+                    })
+                }
+                return function (table, name) {
+                    if (!table.nodeType)
+                        table = document.getElementById(table)
+                    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
+        </script>
+        
+        <script>
+
+            function CallPrint(strid) {
+            var prtContent = document.getElementById(strid);
+            var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=1,scrollbars=1,status=1,addressbar=0');
+            var is_chrome = Boolean(mywindow.chrome);
+            mywindow.document.write(prtContent.innerHTML);
+            mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+            if (is_chrome) {
+            mywindow.onload = function() { // wait until all resources loaded 
+            mywindow.focus(); // necessary for IE >= 10
+            mywindow.print(); // change window to mywindow
+            mywindow.close(); // change window to mywindow
+            };
+            }
+            else {
+            mywindow.document.close(); // necessary for IE >= 10
+            mywindow.focus(); // necessary for IE >= 10
+            mywindow.print();
+            mywindow.close();
+            }
+
+            return true;
+            }
+
+        </script>
+</body>
+</html>
