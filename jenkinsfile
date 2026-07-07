@@ -7,19 +7,19 @@ pipeline {
       }                                                                                                                                                                                                                             
    
       stages {                                                                                                                                                                                                                      
-          stage('Checkout') {                                                                                                                                                                                                     
-              steps {                                                                                                                                                                                                             
-                  git branch: 'main',
-                      credentialsId: 'git-personal-creds',
-                      url: 'https://github.com/SaiDivyaSuru/ecrop.git'                                                                                                                                                              
+           stage('Checkout') {                                                                                                                                                                                                               
+                  steps {                                                                                                                                                                                                                       
+                      git branch: 'main',                                                                                                                                                                                                       
+                          url: 'https://github.com/SaiDivyaSuru/ecrop.git'                                                                                                                                                                      
+                  }                                                                                                                                                                                                                             
+              }                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                
+              stage('Build') {                                                                                                                                                                                                                  
+                  steps {                                                                                                                                                                                                                     
+                      sh 'chmod +x mvnw && ./mvnw clean package -DskipTests'
+                  }
               }
-          }                                                                                                                                                                                                                         
-                                                                                                                                                                                                                                  
-          stage('Build') {                                                                                                                                                                                                        
-              steps {
-                  sh 'mvn clean package -DskipTests'
-              }                                                                                                                                                                                                                     
-          }
+
                                                                                                                                                                                                                                     
           stage('Docker Build') {                                                                                                                                                                                                 
               steps {                                                                                                                                                                                                             
