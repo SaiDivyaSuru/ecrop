@@ -1,0 +1,61 @@
+pipeline {
+      agent any
+                                                                                                                                                                                                                                    
+      environment {
+          IMAGE_NAME = "divyatankala/ecrop"                                                                                                                                                                                            
+          CONTAINER_NAME = "ecrop-app"                                                                                                                                                                                            
+      }                                                                                                                                                                                                                             
+   
+      stages {                                                                                                                                                                                                                      
+          stage('Checkout') {                                                                                                                                                                                                     
+              steps {                                                                                                                                                                                                             
+                  git branch: 'main',
+                      credentialsId: 'git-personal-creds',
+                      url: 'https://github.com/SaiDivyaSuru/ecrop.git'                                                                                                                                                              
+              }
+          }                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                  
+          stage('Build') {                                                                                                                                                                                                        
+              steps {
+                  sh 'mvn clean package -DskipTests'
+              }                                                                                                                                                                                                                     
+          }
+                                                                                                                                                                                                                                    
+          stage('Docker Build') {                                                                                                                                                                                                 
+              steps {                                                                                                                                                                                                             
+                  sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."
+              }                                                                                                                                                                                                                     
+          }
+                                                                                                                                                                                                                                    
+          stage('Docker Push') {                                                                                                                                                                                                  
+              steps {
+                  withCredentials([usernamePassword(
+                      credentialsId: 'dockerhub-creds',
+                      usernameVariable: 'DOCKER_USER',                                                                                                                                                                              
+                      passwordVariable: 'DOCKER_PASS'
+                  )]) {                                                                                                                                                                                                             
+                      sh """                                                                                                                                                                                                      
+                          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin                                                                                                                                         
+                          docker push ${IMAGE_NAME}:${BUILD_NUMBER}
+                          docker push ${IMAGE_NAME}:latest                                                                                                                                                                          
+                      """                                                                                                                                                                                                         
+                  }                                                                                                                                                                                                                 
+              }                                                                                                                                                                                                                   
+          }
+
+          stage('Deploy') {
+              steps {
+                  sh """
+                      docker stop ${CONTAINER_NAME} || true
+                      docker rm ${CONTAINER_NAME} || true                                                                                                                                                                           
+                      docker run -d --name ${CONTAINER_NAME} -p 8083:8083 ${IMAGE_NAME}:latest
+                  """                                                                                                                                                                                                               
+              }                                                                                                                                                                                                                   
+          }                                                                                                                                                                                                                         
+      }
+                                                                                                                                                                                                                                    
+      post {                                                                                                                                                                                                                      
+          success { echo 'Pipeline succeeded! App running on port 8083.' }
+          failure { echo 'Pipeline failed. Check logs above.' }                                                                                                                                                                     
+      }
+  }               
