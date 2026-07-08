@@ -1,29 +1,32 @@
 pipeline {
-      agent any
-                                                                                                                                                                                                                                    
-      environment {
-          IMAGE_NAME = "divyatankala/ecrop"                                                                                                                                                                                            
-          CONTAINER_NAME = "ecrop-app"                                                                                                                                                                                            
-      }                                                                                                                                                                                                                             
-   
-      stages {                                                                                                                                                                                                                      
-           stage('Checkout') {                                                                                                                                                                                                               
-                  steps {                                                                                                                                                                                                                       
-                      git branch: 'main',                                                                                                                                                                                                       
-                          url: 'https://github.com/SaiDivyaSuru/ecrop.git'                                                                                                                                                                      
-                  }                                                                                                                                                                                                                             
-              }                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                
-              stage('Build') {                                                                                                                                                                                                                  
-                  steps {                                                                                                                                                                                                                     
-                      sh 'chmod +x mvnw && ./mvnw clean package -DskipTests'
-                  }
-              }
+      agent any                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                  
+      tools {
+          maven 'Maven'
+      }
 
+      environment {
+          IMAGE_NAME = "divyatankala/ecrop"
+          CONTAINER_NAME = "ecrop-app"                                                                                                                                                                                              
+      }                                                                                                                                                                                                                             
                                                                                                                                                                                                                                     
-          stage('Docker Build') {                                                                                                                                                                                                 
-              steps {                                                                                                                                                                                                             
-                  sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."
+      stages {                                                                                                                                                                                                                      
+          stage('Checkout') {                                                                                                                                                                                                     
+              steps {
+                  git branch: 'main',
+                      url: 'https://github.com/SaiDivyaSuru/ecrop.git'
+              }                                                                                                                                                                                                                     
+          }
+                                                                                                                                                                                                                                    
+          stage('Build') {                                                                                                                                                                                                        
+              steps {
+                  sh 'mvn clean package -DskipTests'
+              }
+          }
+
+          stage('Docker Build') {                                                                                                                                                                                                   
+              steps {
+                  sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."                                                                                                                                      
               }                                                                                                                                                                                                                     
           }
                                                                                                                                                                                                                                     
@@ -52,10 +55,10 @@ pipeline {
                   """                                                                                                                                                                                                               
               }                                                                                                                                                                                                                   
           }                                                                                                                                                                                                                         
-      }
-                                                                                                                                                                                                                                    
-      post {                                                                                                                                                                                                                      
+      }                                                                                                                                                                                                                           
+
+      post {
           success { echo 'Pipeline succeeded! App running on port 8083.' }
           failure { echo 'Pipeline failed. Check logs above.' }                                                                                                                                                                     
       }
-  }               
+  }                     
